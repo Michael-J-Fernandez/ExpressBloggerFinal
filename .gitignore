@@ -1,3 +1,9 @@
+.rest
+route.rest
+*.rest
+
+.vscode
+
 # Logs
 logs
 *.log
