@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const {
     getAllBlogs,
-    createOneBlog,
+    createBlog,
     getOneBlogById,
     deleteOneById,
     updateOneById,
@@ -12,15 +12,15 @@ const {
 
 router.get('/', getAllBlogs);
 
-router.get('/get-one/:id', getOneBlogById);
+router.post('/', createBlog);
 
-router.post('/create-one', createOneBlog);
+router.get('/:id', getOneBlogById);
 
-router.get('/delete-by-id/:id', deleteOneById);
+router.put('/:id', updateOneById);
 
-router.get('/delete-many', deleteMany);
+router.delete('/delete-many', deleteMany);
 
-router.put('/update-by-id/:id', updateOneById);
+router.delete('/:id', deleteOneById);
 
 
 module.exports = router;
