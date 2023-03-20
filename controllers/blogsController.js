@@ -32,15 +32,9 @@ async function getOneBlogById(req, res) {
     }
 }
 
-async function createOneBlog(req, res) {
+async function createBlog(req, res) {
     try {
-      const newBlog = await Blog.create({
-          title: req.body.title,
-          text: req.body.text,
-          author: req.body.author,
-          categories: req.body.category,
-          year: req.body.year
-      })
+      const newBlog = await Blog.create( req.body )
   
       res.json({
           success: true,
@@ -129,7 +123,7 @@ async function deleteMany(req, res) {
 
 module.exports = {
     getAllBlogs,
-    createOneBlog,
+    createBlog,
     getOneBlogById,
     deleteOneById,
     updateOneById,
