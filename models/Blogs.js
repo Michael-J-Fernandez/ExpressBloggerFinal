@@ -17,7 +17,7 @@ const blogSchema = new mongoose.Schema({
   categories: [String],
   id: {
     type: String,
-    default: uuidv4(),
+    default: uuidv4,
   }
 }, { timestamps: true, strictQuery: true });
 
