@@ -3,14 +3,15 @@ const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
-//load environment variables from .env (.env is the default file)
+const cors = require("cors");
+
 require("dotenv").config();
 
 const {mongooseConnect} = require('./mongoose.js')
 mongooseConnect();
 
 
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 8001;
 
 //register routes.
 //NOTE: notice how there is .js after index, this is because
@@ -20,6 +21,9 @@ const usersRouter = require('./routes/users');
 const blogsRouter = require('./routes/blogs');
 
 const app = express();
+app.use(cors());
+app.options("*", cors());
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -36,9 +40,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 
 //register routes 
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
-app.use('/blogs', blogsRouter);
+app.use('/api/', indexRouter);
+app.use('/api/users', usersRouter);
+app.use('/api/blogs', blogsRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
