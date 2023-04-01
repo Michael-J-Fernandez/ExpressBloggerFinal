@@ -20,12 +20,18 @@ const loginUser = async (req, res, next) => {
 
     const token = generateToken(user.id);
 
-    res.json({
-      success: true,
-      message: "User logged in!",
-      user: user.email,
-      token,
-    });
+    res
+      .cookie("loginToken", token, {
+        httpOnly: true,
+        secure: true,
+        sameSite: "none",
+      })
+      .json({
+        success: true,
+        message: "User logged in!",
+        user: user.email,
+        token,
+      });
   } catch (error) {
     res.json({ error: error.message });
   }
@@ -39,15 +45,35 @@ const registerUser = async (req, res, next) => {
 
     const token = generateToken(newUser.id);
 
-    res.json({
-      success: true,
-      message: "New user registered!",
-      user: newUser.email,
-      token,
-    });
+    res
+      .cookie("loginToken", token, {
+        httpOnly: true,
+        secure: true,
+        sameSite: "none",
+      })
+      .json({
+        success: true,
+        message: "New user registered!",
+        user: newUser.email,
+        token,
+      });
   } catch (error) {
     res.json({ error: error.message });
   }
 };
 
-module.exports = { getAllUsers, loginUser, registerUser };
+const logoutUser = (req, res, next) => {
+  res
+  .cookie("userToken", "", {
+    httpOnly: true,
+    maxAge: 1,
+    secure: true,
+    sameSite: "none",
+  })
+  .json({
+    success: true,
+    message: "User logged out!"
+  });
+}
+
+module.exports = { getAllUsers, loginUser, registerUser, logoutUser };
