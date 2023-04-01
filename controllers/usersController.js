@@ -1,4 +1,6 @@
-const User = require("../models/Users");
+const User = require("../models/usersModel");
+
+const { generateToken, verifyToken } = require("../middleware/auth");
 
 const getAllUsers = async (req, res, next) => {
   const allUsers = await User.find({});
@@ -17,14 +19,18 @@ const registerUser = async (req, res, next) => {
   const { email, password } = req.body;
 
   try {
-    const newUser = await User.register(email, password);
+    const newUser = await User.register(email.toLowerCase(), password);
+
+    const token = generateToken(newUser.id);
 
     res.json({
+      success: true,
       message: "New user registered!",
-      user: newUser,
+      user: newUser.email,
+      token,
     });
   } catch (error) {
-    res.json({ error: error.message })
+    res.json({ error: error.message });
   }
 };
 
