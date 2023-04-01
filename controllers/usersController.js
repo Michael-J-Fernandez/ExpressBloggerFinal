@@ -1,6 +1,10 @@
 const User = require("../models/usersModel");
 
-const { generateToken, verifyToken } = require("../middleware/auth");
+const {
+  generateToken,
+  verifyToken,
+  validatePassword,
+} = require("../middleware/auth");
 
 const getAllUsers = async (req, res, next) => {
   const allUsers = await User.find({});
@@ -9,10 +13,22 @@ const getAllUsers = async (req, res, next) => {
 };
 
 const loginUser = async (req, res, next) => {
-  res.json({
-    message: "Login user!",
-    user: req.body,
-  });
+  const { email, password } = req.body;
+
+  try {
+    const user = await User.login(email.toLowerCase(), password);
+
+    const token = generateToken(user.id);
+
+    res.json({
+      success: true,
+      message: "User logged in!",
+      user: user.email,
+      token,
+    });
+  } catch (error) {
+    res.json({ error: error.message });
+  }
 };
 
 const registerUser = async (req, res, next) => {
