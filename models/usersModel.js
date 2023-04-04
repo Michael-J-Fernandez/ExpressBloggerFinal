@@ -18,6 +18,11 @@ const userSchema = mongoose.Schema(
       type: String,
       default: uuidv4,
     },
+    userRole: {
+      type: String,
+      enum: ["user", "admin"],
+      default: "user",
+    },
   },
   { timestamps: true, strictQuery: true }
 );
@@ -31,7 +36,15 @@ userSchema.statics.register = async function (email, password) {
 
   const hashedPassword = await bcrypt.hash(password, 10);
 
-  const newUser = await this.create({ email, password: hashedPassword });
+  let userRole = null;
+
+  if (email.includes("@codeimmersives.com")) {
+    userRole = "admin";
+  } else {
+    userRole = "user";
+  }
+
+  const newUser = await this.create({ email, password: hashedPassword, userRole });
 
   return newUser;
 };
@@ -47,7 +60,7 @@ userSchema.statics.login = async function (email, password) {
     throw Error("User does not exist.");
   }
 
-  const match = validatePassword(password, user.password);
+  const match = await validatePassword(password, user.password);
 
   if (!match) {
     throw Error("Incorrect password.");
