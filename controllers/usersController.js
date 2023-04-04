@@ -1,10 +1,6 @@
 const User = require("../models/usersModel");
 
-const {
-  generateToken,
-  verifyToken,
-  validatePassword,
-} = require("../middleware/auth");
+const { generateToken } = require("../middleware/auth");
 
 const getAllUsers = async (req, res, next) => {
   const allUsers = await User.find({});
