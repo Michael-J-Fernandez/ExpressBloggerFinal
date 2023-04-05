@@ -19,7 +19,7 @@ const loginUser = async (req, res, next) => {
     res.json({
       success: true,
       message: "User logged in!",
-      user: user.email,
+      name: user.fName,
       token,
     });
   } catch (error) {
@@ -31,14 +31,14 @@ const registerUser = async (req, res, next) => {
   const { email, password } = req.body;
 
   try {
-    const newUser = await User.register(email.toLowerCase(), password);
+    const newUser = await User.register(req.body);
 
     const token = generateToken(newUser.id);
 
     res.json({
       success: true,
       message: "New user registered!",
-      user: newUser.email,
+      name: newUser.fName,
       token,
     });
   } catch (error) {
