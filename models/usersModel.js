@@ -5,10 +5,19 @@ const { validatePassword } = require("../middleware/auth");
 
 const userSchema = mongoose.Schema(
   {
+    fName: {
+      type: String,
+      required: true,
+    },
+    lName: {
+      type: String,
+      required: true,
+    },
     email: {
       type: String,
       required: true,
       unique: true,
+      lowercase: true,
     },
     password: {
       type: String,
@@ -27,7 +36,9 @@ const userSchema = mongoose.Schema(
   { timestamps: true, strictQuery: true }
 );
 
-userSchema.statics.register = async function (email, password) {
+userSchema.statics.register = async function (userData) {
+  const { fName, lName, email, password } = userData;
+
   const userExists = await this.findOne({ email });
 
   if (userExists) {
@@ -44,7 +55,13 @@ userSchema.statics.register = async function (email, password) {
     userRole = "user";
   }
 
-  const newUser = await this.create({ email, password: hashedPassword, userRole });
+  const newUser = await this.create({
+    fName,
+    lName,
+    email,
+    password: hashedPassword,
+    userRole,
+  });
 
   return newUser;
 };
